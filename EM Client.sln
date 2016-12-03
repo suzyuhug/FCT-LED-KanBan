@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EM Client", "EM Client\EM Client.csproj", "{46EBD464-1C21-405D-B511-335328D8A29B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EM Server", "EM Server\EM Server.csproj", "{CF040FA7-ECE2-45C1-962C-812DB8BAD76C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46EBD464-1C21-405D-B511-335328D8A29B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46EBD464-1C21-405D-B511-335328D8A29B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46EBD464-1C21-405D-B511-335328D8A29B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46EBD464-1C21-405D-B511-335328D8A29B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF040FA7-ECE2-45C1-962C-812DB8BAD76C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF040FA7-ECE2-45C1-962C-812DB8BAD76C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF040FA7-ECE2-45C1-962C-812DB8BAD76C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF040FA7-ECE2-45C1-962C-812DB8BAD76C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
