@@ -55,7 +55,7 @@ namespace EM_Server
                     socketConnectedThread.IsBackground = true;
                     socketConnectedThread.Start(acceptSocket);
                 }
-                Thread.Sleep(200);
+                Thread.Sleep(1000);
             }
         }
 
@@ -82,8 +82,15 @@ namespace EM_Server
 
         private void ReceiveCallBack(IAsyncResult ar)
         {
+            try
+            {
+
+           
             EndPoint ep = ar.AsyncState as IPEndPoint;
-            SocketInfo info = _listSocketInfo[ep.ToString()];
+            
+  SocketInfo info = _listSocketInfo[ep.ToString()];
+           
+          
             int readCount = 0;
             try
             {
@@ -119,6 +126,12 @@ namespace EM_Server
                 }
                 if (OnReceiveMsg != null) OnReceiveMsg(info.socket.RemoteEndPoint.ToString());
             }
+            }
+            catch (Exception)
+            {
+
+            
+            }
         }
 
         public void SendMsg(string text, string endPoint)
@@ -147,7 +160,7 @@ namespace EM_Server
 
             public SocketInfo()
             {
-                buffer = new byte[1024 * 4];
+                buffer = new byte[1024];
             }
         }
 

@@ -63,7 +63,7 @@ namespace EM_Client
 
             public SocketInfo()
             {
-                buffer = new byte[1024 * 4];
+                buffer = new byte[1024];
             }
         }
 
