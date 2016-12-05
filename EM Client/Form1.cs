@@ -22,12 +22,12 @@ namespace EM_Client
         private void button1_Click(object sender, EventArgs e)
         {
             _scm.SendMsg("Flex / Ultra Assembly      ");
-           
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            StationLab.Text =Properties.Settings.Default.Station ;
+            StationLab.Text = Properties.Settings.Default.Station;
             InitSocket();
             modellist();
             pageset();
@@ -71,11 +71,12 @@ namespace EM_Client
         {
             if (serstatus.InvokeRequired)
             {
-                this.Invoke(new Action(() => {
-                    serstatus.Text = "服务器连接成功";   
-                    svip .Text =$"Server IP：{ip}";
+                this.Invoke(new Action(() =>
+                {
+                    serstatus.Text = "服务器连接成功";
+                    svip.Text = $"Server IP：{ip}";
                     svport.Text = $"Server Port：{ port.ToString()}";
-                    svstatus .Text = "Status：successful";
+                    svstatus.Text = "Status：successful";
                 }));
             }
             else
@@ -85,12 +86,12 @@ namespace EM_Client
         }
         public void OnFaildConnect()//连接失败
         {
-            if (serstatus .InvokeRequired)
+            if (serstatus.InvokeRequired)
             {
                 this.Invoke(new Action(() =>
                 {
                     serstatus.Text = "服务器连接失败";
-                    svstatus .Text = "连接失败";
+                    svstatus.Text = "连接失败";
                 }));
             }
             else
@@ -99,7 +100,7 @@ namespace EM_Client
             }
         }
 
-       
+
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -114,7 +115,7 @@ namespace EM_Client
         {
             StationSetting SetFrm = new EM_Client.StationSetting();
             SetFrm.ShowDialog();
-            StationLab.Text =Properties.Settings.Default.Station;
+            StationLab.Text = Properties.Settings.Default.Station;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -124,36 +125,50 @@ namespace EM_Client
             panel2.Top = 60;
             panel2.Left = 15;
             panel1.Visible = false;
-            panel2.Visible = true; 
+            panel2.Visible = true;
 
 
-            string StrSql = $"exec sp_AssyStep '{Modelcombo.Text}'";
+            string StrSql = $"exec sp_AssyStep '{Modelcombo.Text}','{StationLab.Text}'";
             DataSet ds = new DataSet();
             ds = AdoInterface.GetDataSet(StrSql);
             GridView.DataSource = ds.Tables[0];
-        }
 
+
+            rockontime();
+
+
+
+        }
+        private void rockontime()//进度条计时
+        {
+            PB.Maximum = 840;
+            PB.Value = 840;
+            timer1.Interval = 60000;
+            timer1.Start();
+
+
+        }
+        string tempgvid = null;
         private void GridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (GridView.RowCount>0)
+            if (GridView.RowCount > 0)
             {
-                if (e.ColumnIndex==3)
+                if (e.ColumnIndex == 3)
                 {
                     if (GridView.CurrentRow.Cells["EntBut"].Value.ToString() != "完成组装")
                     {
-
-                   
-                    for (int i = 0; i < GridView.RowCount ; i++)
-                    {
-                        if (GridView.Rows[i].Cells["EntBut"].Value.ToString()== "正在组装")
+                        for (int i = 0; i < GridView.RowCount; i++)
                         {
-                            GridView.Rows[i].Cells["EntBut"].Value = "完成组装";
-                        }
+                            if (GridView.Rows[i].Cells["EntBut"].Value.ToString() == "正在组装")
+                            {
+                                GridView.Rows[i].Cells["EntBut"].Value = "完成组装";
+                                GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
+                            }
 
-                    
-                    }
-                    GridView.CurrentRow.Cells["EntBut"].Value = "正在组装";
-                    _scm.SendMsg($"{StationLab.Text}#{GridView.CurrentRow.Cells["ID"].Value.ToString()}");
+                        }
+                        GridView.CurrentRow.Cells["EntBut"].Value = "正在组装";
+                        tempgvid = GridView.CurrentRow.Cells["ID"].Value.ToString();
+                        _scm.SendMsg($"{StationLab.Text}#{GridView.CurrentRow.Cells["ID"].Value.ToString()}#100%");
 
                     }
                     else
@@ -161,9 +176,44 @@ namespace EM_Client
                         MessageBox.Show("q2132");
                     }
                 }
-               
+
 
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            timer1.Enabled = false;
+            FaFrm Fa = new EM_Client.FaFrm();
+            Fa.ShowDialog();
+        }
+        int num;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (PB.Value > 0)
+            {
+                PB.Value = PB.Value - 1;
+                //  Perlabel.Text = ((PB.Value / PB.Maximum) * 100).ToString();
+                double percent = (double)PB.Value / PB.Maximum;
+                Perlabel.Text =percent.ToString ("0.0%");
+                num++;
+                if (num==10)
+                {
+                    num = 0;
+                    _scm.SendMsg($"{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
+                }
+             
+               
+
+                
+            }
+            else
+            {
+                timer1.Enabled = false;
+                MessageBox.Show("down");
+            }
+
+
         }
     }
 }

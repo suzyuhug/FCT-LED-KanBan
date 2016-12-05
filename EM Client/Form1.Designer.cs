@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.button1 = new System.Windows.Forms.Button();
             this.serstatus = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -53,6 +55,13 @@
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Step = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EntBut = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.Perlabel = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.PB = new System.Windows.Forms.ToolStripProgressBar();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -88,7 +97,12 @@
             this.toolStripSeparator1,
             this.svport,
             this.toolStripSeparator2,
-            this.svstatus});
+            this.svstatus,
+            this.toolStripSeparator3,
+            this.toolStripSeparator4,
+            this.Perlabel,
+            this.toolStripSeparator5,
+            this.PB});
             this.toolStrip1.Location = new System.Drawing.Point(0, 493);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(804, 43);
@@ -225,6 +239,7 @@
             this.button3.TabIndex = 1;
             this.button3.Text = "组装异常";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // GridView
             // 
@@ -263,6 +278,7 @@
             // 
             // bs
             // 
+            this.bs.FillWeight = 38.07107F;
             this.bs.HeaderText = "标识";
             this.bs.Name = "bs";
             this.bs.ReadOnly = true;
@@ -278,7 +294,7 @@
             // Step
             // 
             this.Step.DataPropertyName = "AssyStep";
-            this.Step.FillWeight = 152.2843F;
+            this.Step.FillWeight = 199.4383F;
             this.Step.HeaderText = "组装步骤";
             this.Step.Name = "Step";
             this.Step.ReadOnly = true;
@@ -286,10 +302,52 @@
             // EntBut
             // 
             this.EntBut.DataPropertyName = "But";
-            this.EntBut.FillWeight = 47.71573F;
+            this.EntBut.FillWeight = 62.49065F;
             this.EntBut.HeaderText = "Column1";
             this.EntBut.Name = "EntBut";
             this.EntBut.ReadOnly = true;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "error.png");
+            this.imageList1.Images.SetKeyName(1, "tick.png");
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 43);
+            // 
+            // Perlabel
+            // 
+            this.Perlabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.Perlabel.Name = "Perlabel";
+            this.Perlabel.Size = new System.Drawing.Size(35, 40);
+            this.Perlabel.Text = "100%";
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 43);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 43);
+            // 
+            // PB
+            // 
+            this.PB.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.PB.AutoSize = false;
+            this.PB.Name = "PB";
+            this.PB.Size = new System.Drawing.Size(300, 20);
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Form1
             // 
@@ -349,6 +407,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Step;
         private System.Windows.Forms.DataGridViewButtonColumn EntBut;
+        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripLabel Perlabel;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripProgressBar PB;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
