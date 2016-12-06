@@ -16,8 +16,10 @@ namespace EM_Server
     {
         SocketManager _sm = null;
 
-        string ip ="10.194.48.150";
+       string ip ="10.194.48.150";
         //string ip = "127.0.0.1";
+
+        
         int port = 1113;
 
      
@@ -36,18 +38,30 @@ namespace EM_Server
             _sm.Start();
             init();
         }
-        private void AssyLoad(string St,int id,string tjd)//发送组装信息
+        private void AssyLoad(string St, int id, string tjd, string mes)//发送组装信息
         {
             string Strsql = $"exec sp_AssyLoad '{St}','{id}'";
             DataSet ds = new DataSet();
             ds = Adoread.GetDataSet(Strsql);
-            if (ds.Tables[0].Rows.Count >0)
+            if (ds.Tables[0].Rows.Count > 0)
             {
+
                 string tempStation = ds.Tables[0].Rows[0]["Station"].ToString();
                 string tempIP = ds.Tables[0].Rows[0]["KanBanIP"].ToString();
-                string tempMes = ds.Tables[0].Rows[0]["Message"].ToString()+"                     ";
-                string tempjd =tjd;
-                ledkanban(tempIP,tempStation ,tempMes,tempjd );
+                string tempMes;
+                if (mes == null)
+                {
+                    tempMes = ds.Tables[0].Rows[0]["Message"].ToString() + "              ";
+
+                }
+                else
+                {
+                    tempMes = mes;
+                }
+
+
+                string tempjd = tjd;
+                ledkanban(tempIP, tempStation, tempMes, tempjd);
 
             }
         }
@@ -71,7 +85,22 @@ namespace EM_Server
                     listBox1.Items.Add(AppendReceiveMsg(msg, ip));
                     string str = AppendReceiveMsg(msg, ip);
                     string[] sArray = str.Split('#');
-                    AssyLoad(sArray[0],int.Parse(sArray[1]),sArray[2]);
+                    if (sArray[0]=="Operational")
+                    {
+                        AssyLoad(sArray[1], int.Parse(sArray[2]), sArray[3],null);
+                    }
+                    else if (sArray[0] == "Completed")
+                    {
+                        AssyLoad(sArray[1], int.Parse(sArray[2]), "100%","Completed                ");
+                    }
+                    else if (sArray[0] == "Unusual")
+                    {
+                        AssyLoad(sArray[1], 0, sArray [2], sArray[3]+"              ");
+                       // _scm.SendMsg($"Unusual#{StationLab.Text}#{str}#100%");
+                    }
+
+
+                 
 
 
 
@@ -101,6 +130,19 @@ namespace EM_Server
                 listBox1.Items.Add(clientIP + "  已连接至本机");
             }
         }
+        private void deluser(string str)
+        {
+
+            for (int i = 0; i < listView1.Items.Count; i++)
+            {
+                if (listView1.Items[i].Text == str)
+                {
+                    listView1.Items.RemoveAt(i);
+                }
+
+            }
+
+        }
         public void OnDisConnected(string clientIp)
         {
             if (listBox1 .InvokeRequired)
@@ -108,8 +150,8 @@ namespace EM_Server
                 this.Invoke(new Action(() =>
                 {
                      listBox1.Items.Add(clientIp + "  已断开连接"); 
-                    object obj = new { Value = clientIp, Text = clientIp };
-                    //cbClient.Items.Remove(obj);
+                   
+                    deluser(clientIp);
                 }));
             }
             else
@@ -127,10 +169,7 @@ namespace EM_Server
             return DateTime.Now.ToString("HH:mm:ss");
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            listView1.Items.Add("12313",0); 
-        }
+      
 
         private void ledkanban(string TempIP,string Tempst,string message,string Jd)
         {
@@ -194,18 +233,16 @@ namespace EM_Server
             {
                 string ErrStr;
                 ErrStr = LedDll.LS_GetError(nResult);
-                MessageBox.Show(ErrStr);
+             
+                listBox1.Items.Add(ErrStr );
             }
             else
             {
-                //MessageBox.Show("发送成功");
+                listBox1.Items.Add(TempIP +"    LED发发送成功");
             }
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            
-        }
+      
     }
 }

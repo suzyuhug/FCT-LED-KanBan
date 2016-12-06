@@ -22,17 +22,5 @@ namespace EM_Client.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Station-1")]
-        public string Station {
-            get {
-                return ((string)(this["Station"]));
-            }
-            set {
-                this["Station"] = value;
-            }
-        }
     }
 }

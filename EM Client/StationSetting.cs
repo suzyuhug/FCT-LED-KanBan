@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Windows.Forms;
 
@@ -27,9 +28,17 @@ namespace EM_Client
 
         private void ModelSave_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Station = StationSetCombo.Text;
-            Properties.Settings.Default.Save();
-            Close();
+            string StrSql = $"sp_UpdateStation '{StationSetCombo.Text }','{Dns.GetHostName()}'";
+            if (AdoInterface.InsertData(StrSql)==1)
+            {
+                MessageBox.Show("Station绑定成功");
+                Close();
+                
+            }
+            
+        //    Properties.Settings.Default.Station = StationSetCombo.Text;
+        //    Properties.Settings.Default.Save();
+        //    Close();
         }
     }
 }
