@@ -17,9 +17,10 @@ namespace EM_Server
         SocketManager _sm = null;
 
        string ip ="10.194.48.150";
+        //string ip = "10.194.40.65";
         //string ip = "127.0.0.1";
 
-        
+
         int port = 1113;
 
      
@@ -31,6 +32,7 @@ namespace EM_Server
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.Text = this.Text + "-" + Application.ProductVersion;
             _sm = new SocketManager(ip, port);
             _sm.OnReceiveMsg += OnReceiveMsg;
             _sm.OnConnected += OnConnected;

@@ -115,7 +115,7 @@ namespace EM_Server
                 {
                     info.msgBuffer = info.buffer;
                 }
-                string msgTip = Encoding.GetEncoding("GB2312").GetString(info.msgBuffer,0,info.msgBuffer.Length );
+                string msgTip = Encoding.ASCII.GetString(info.msgBuffer,0,info.msgBuffer.Length );
                 if (msgTip == "\0\0\0faild")
                 {
                     info.isConnected = false;

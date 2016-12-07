@@ -24,7 +24,7 @@ namespace EM_Client
 
         private void Form1_Load(object sender, EventArgs e)
         {
-      
+            this.Text = this.Text +"-"+ Application.ProductVersion;
             Station();
             InitSocket();
             modellist();
@@ -54,11 +54,36 @@ namespace EM_Client
 
         private void modellist()//加载Model comlist数据
         {
-            string Strsql = $"exec sp_ModelList '{StationLab.Text }'";
+            string Strsql = $"exec sp_ModelList '{StationLab.Text}'";
             DataSet ds = new DataSet();
             ds = AdoInterface.GetDataSet(Strsql);
             Modelcombo.DataSource = ds.Tables[0];
             Modelcombo.DisplayMember = "Model";
+
+        }
+        private void sendmessage(string message)
+        {
+            if (svstatus.Text== "Status：successful")
+            {
+                try
+                {
+
+
+                    _scm.SendMsg(message);
+
+                }
+                catch (Exception )
+                {
+                    MessageBox.Show("服务器断开连接，请重试！");
+                    InitSocket();
+                }
+
+
+            }
+            
+
+
+
 
         }
 
@@ -144,12 +169,16 @@ namespace EM_Client
         private void rockontime()//进度条计时
         {
             string StrSql = $"exec sp_QueryH '{Modelcombo.Text}'";
-            int t = int.Parse (AdoInterface.Readstr(StrSql));
-            label4.Text = $"组装时长：{t/60} 小时";
-            PB.Maximum = t;
-            PB.Value = t;
-            timer1.Interval = 2000;
-            timer1.Start();
+            if (AdoInterface.Readstr(StrSql)!=null )
+            {
+                int t = int.Parse(AdoInterface.Readstr(StrSql));
+                label4.Text = $"组装时长：{t / 60} 小时";
+                PB.Maximum = t;
+                PB.Value = t;
+                timer1.Interval = 60000;
+                timer1.Start();
+            }
+           
 
 
         }
@@ -160,41 +189,48 @@ namespace EM_Client
             {
                 if (e.ColumnIndex == 3)
                 {
-                    if (label3.Text=="")
+                    if (svstatus.Text == "Status：successful")
                     {
 
-                        if (GridView.CurrentRow.Cells["EntBut"].Value.ToString() != "完成组装")
+                        if (label3.Text == "")
                         {
-                            for (int i = 0; i < GridView.RowCount; i++)
+
+                            if (GridView.CurrentRow.Cells["EntBut"].Value.ToString() != "完成组装")
                             {
-                                if (GridView.Rows[i].Cells["EntBut"].Value.ToString() == "正在组装")
+                                for (int i = 0; i < GridView.RowCount; i++)
                                 {
-                                    GridView.Rows[i].Cells["EntBut"].Value = "完成组装";
-                                    GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
+                                    if (GridView.Rows[i].Cells["EntBut"].Value.ToString() == "正在组装")
+                                    {
+                                        GridView.Rows[i].Cells["EntBut"].Value = "完成组装";
+                                        GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
+                                    }
+
                                 }
 
+
+
+                                GridView.CurrentRow.Cells["EntBut"].Value = "正在组装";
+                                GridView.CurrentRow.Cells["bs"].Value = imageList1.Images[0];
+                                tempgvid = GridView.CurrentRow.Cells["ID"].Value.ToString();
+                                sendmessage($"Operational#{StationLab.Text}#{GridView.CurrentRow.Cells["ID"].Value.ToString()}#100%");
+
                             }
-
-
-
-                            GridView.CurrentRow.Cells["EntBut"].Value = "正在组装";
-                            GridView.CurrentRow.Cells["bs"].Value = imageList1.Images[0];
-                            tempgvid = GridView.CurrentRow.Cells["ID"].Value.ToString();
-                            _scm.SendMsg($"Operational#{StationLab.Text}#{GridView.CurrentRow.Cells["ID"].Value.ToString()}#100%");
-
+                            else
+                            {
+                                MessageBox.Show("已经完成不可以再点");
+                            }
                         }
                         else
                         {
-                            MessageBox.Show("已经完成不可以再点");
+                            MessageBox.Show("有异常信息在进行中");
+                            label3.Text = "";
+                            timer1.Enabled = true;
                         }
                     }
                     else
                     {
-                        MessageBox.Show("有异常信息在进行中");
-                        label3.Text = "";
-                        timer1.Enabled = true;     
+                        MessageBox.Show("服务端连接失败，请重试！");
                     }
-                    
                 }
 
 
@@ -203,13 +239,19 @@ namespace EM_Client
 
         private void button3_Click(object sender, EventArgs e)
         {
-            timer1.Enabled = false;
-            FaFrm Fa = new EM_Client.FaFrm();
-            Fa.ShowDialog();
-            string str = AdoInterface.FrmfailMes;
-            label3.Text = str;
-            _scm.SendMsg($"Unusual#{StationLab.Text}#{Perlabel.Text}#{str}");
-
+            if (svstatus.Text == "Status：successful")
+            {
+                timer1.Enabled = false;
+                FaFrm Fa = new EM_Client.FaFrm();
+                Fa.ShowDialog();
+                string str = AdoInterface.FrmfailMes;
+                label3.Text = str;
+                sendmessage($"Unusual#{StationLab.Text}#{Perlabel.Text}#{str}");
+            }
+            else
+            {
+                MessageBox.Show("服务端连接失败，请重试！");
+            }
         }
         int num;
         private void timer1_Tick(object sender, EventArgs e)
@@ -224,11 +266,9 @@ namespace EM_Client
                 if (num==10)
                 {
                     num = 0;
-                    _scm.SendMsg($"Operational#{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
+                    sendmessage ($"Operational#{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
                 }
-             
-               
-
+                           
                 
             }
             else
@@ -242,12 +282,19 @@ namespace EM_Client
 
         private void button4_Click(object sender, EventArgs e)
         {
-            timer1.Enabled = false;
-            panel2.Visible = false;
-            pageset();
-            PB.Maximum = 100;PB.Value = 100;
-            Perlabel.Text = "100%";
-            _scm.SendMsg($"Completed#{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
+            if (svstatus.Text == "Status：successful")
+            {
+                timer1.Enabled = false;
+                panel2.Visible = false;
+                pageset();
+                PB.Maximum = 100; PB.Value = 100;
+                Perlabel.Text = "100%";
+                sendmessage($"Completed#{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
+            }
+            else
+            {
+                MessageBox.Show("服务端连接失败，请重试！");
+            }
         }
     }
 }

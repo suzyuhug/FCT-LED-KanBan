@@ -16,46 +16,73 @@ namespace EM_Client
         public static string FrmfailMes = null;
 
         public static DataSet  GetDataSet(string strSql)
-        {          
+        {
+            try
+            {
                 SqlConnection cn = new SqlConnection(SqlData);
-                cn.Open();          
-                SqlCommand cmd = new SqlCommand(strSql , cn);
+                cn.Open();
+                SqlCommand cmd = new SqlCommand(strSql, cn);
                 SqlDataAdapter dp = new SqlDataAdapter(cmd);
                 DataSet ds = new DataSet();
-                dp.Fill(ds);                                
+                dp.Fill(ds);
                 cn.Close();
-            cn.Dispose();
-                return ds;         
+                cn.Dispose();
+                return ds;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }     
+                    
         }
 
         public static string Readstr(string strSql)
         {
-            string str;
-            SqlConnection cn = new SqlConnection(SqlData);
-            cn.Open();
-            SqlCommand cmd = new SqlCommand(strSql, cn);
-            SqlDataAdapter dp = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            dp.Fill(ds);
-            cn.Close();
-            cn.Dispose();
-            if (ds.Tables[0].Rows.Count >0)
+            try
             {
-                str = ds.Tables[0].Rows[0][0].ToString();
-                return str;
+                string str;
+                SqlConnection cn = new SqlConnection(SqlData);
+                cn.Open();
+                SqlCommand cmd = new SqlCommand(strSql, cn);
+                SqlDataAdapter dp = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                dp.Fill(ds);
+                cn.Close();
+                cn.Dispose();
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    str = ds.Tables[0].Rows[0][0].ToString();
+                    return str;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+
+                return null;
+            }
+           
 
         }
         public static int InsertData(string strSql)
         {
-            SqlConnection cn = new SqlConnection(SqlData);        
-            SqlCommand cmd = new SqlCommand(strSql, cn);
-            cn.Open();
-            cmd.ExecuteNonQuery();
-            cn.Close();
-            cn.Dispose();
-            return 1;
+            try
+            {
+                SqlConnection cn = new SqlConnection(SqlData);
+                SqlCommand cmd = new SqlCommand(strSql, cn);
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+                cn.Dispose();
+                return 1;
+            }
+            catch (Exception)
+            {
+
+                return 0;
+            }
+            
         }
 
     }

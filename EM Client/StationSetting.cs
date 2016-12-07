@@ -31,14 +31,34 @@ namespace EM_Client
             string StrSql = $"sp_UpdateStation '{StationSetCombo.Text }','{Dns.GetHostName()}'";
             if (AdoInterface.InsertData(StrSql)==1)
             {
-                MessageBox.Show("Station绑定成功");
+                MessageBox.Show("Station绑定成功,请重新启动程序！");
                 Close();
+               Dispose(); 
+                Application.Exit();
                 
             }
             
         //    Properties.Settings.Default.Station = StationSetCombo.Text;
         //    Properties.Settings.Default.Save();
         //    Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (textBox1.Text=="admin")
+            {
+                panel1.Width = this.Width - 20;
+                panel1.Height = Height - 20;
+                panel2.Visible = false;
+                panel1.Visible = true;
+
+
+            }
+            else
+            {
+                MessageBox.Show("密码错误，请重输入密码！");
+                textBox1.Clear();textBox1.Focus();
+            }
         }
     }
 }

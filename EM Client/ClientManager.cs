@@ -52,9 +52,12 @@ namespace EM_Client
 
         public void SendMsg(string msg)
         {
-            byte[] buffer = Encoding.GetEncoding("GB2312").GetBytes(msg);
-          
-            _socket.Send(buffer);
+            
+                byte[] buffer = Encoding.ASCII.GetBytes(msg);
+
+                _socket.Send(buffer);
+            
+           
         }
 
         public class SocketInfo
