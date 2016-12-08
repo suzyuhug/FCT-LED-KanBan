@@ -13,33 +13,66 @@ namespace EM_Client
     public partial class Form1 : Form
     {
         ClientManager _scm = null;
-        string ip = "10.194.48.150";
+        string ip = "127.0.0.1";
         int port = 1113;
         public Form1()
         {
             InitializeComponent();
         }
 
-      
-
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.Text = this.Text +"-"+ Application.ProductVersion;
+            this.Text = this.Text + "-" + Application.ProductVersion;
             Station();
             InitSocket();
             modellist();
-            pageset();
-            
-           
+            string Strsql = $"exec sp_Busy '{StationLab.Text}'";
+            string statusID = AdoInterface.Readstr(Strsql);
+            if (statusID == "0")
+            {
+                pageset();
+            }
+            else if (statusID == "1")
+            {
+                button2_Click(sender, e);
+            }
+        }
+        private void Tryconnect()//尝试再次连接
+        {
+            panel3.Width = 317;
+            panel3.Height = 136;
+            panel3.Top = 170;
+            panel3.Left = 250;
+            timer2.Interval = 100;
+            timer2.Start();
+            panel3.Visible = true;
+
+        }
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            if (PBCS.Value < 100)
+            {
+                PBCS.Value += 1;
+            }
+            else
+            {
+                InitSocket();
+                PBCS.Value = 0;
+                if (svstatus.Text == "Status：successful")
+                {
+                    panel3.Visible = false;
+                    timer2.Enabled = false;
+                }
+            }
+
 
         }
         private void Station()//查询当前电脑绑定的Station
         {
             string Strsql = $"exec sp_Station_Find '{Dns.GetHostName()}'";
             StationLab.Text = AdoInterface.Readstr(Strsql);
-
         }
-        
+
         private void pageset()//页面布局设置
         {
             panel1.Width = 365;
@@ -57,34 +90,29 @@ namespace EM_Client
             string Strsql = $"exec sp_ModelList '{StationLab.Text}'";
             DataSet ds = new DataSet();
             ds = AdoInterface.GetDataSet(Strsql);
-            Modelcombo.DataSource = ds.Tables[0];
-            Modelcombo.DisplayMember = "Model";
+            if (ds != null)
+            {
+                Modelcombo.DataSource = ds.Tables[0];
+                Modelcombo.DisplayMember = "Model";
+            }
+
 
         }
         private void sendmessage(string message)
         {
-            if (svstatus.Text== "Status：successful")
+            if (svstatus.Text == "Status：successful")
             {
                 try
                 {
-
-
                     _scm.SendMsg(message);
-
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                     MessageBox.Show("服务器断开连接，请重试！");
-                    InitSocket();
+                    svstatus.Text = "连接失败";
+                    Tryconnect();
                 }
-
-
             }
-            
-
-
-
-
         }
 
         private void InitSocket()//用于服务端的连接
@@ -153,33 +181,42 @@ namespace EM_Client
             panel2.Left = 15;
             panel1.Visible = false;
             panel2.Visible = true;
-
-
+            label2.Text = Modelcombo.Text;
             string StrSql = $"exec sp_AssyStep '{Modelcombo.Text}','{StationLab.Text}'";
             DataSet ds = new DataSet();
             ds = AdoInterface.GetDataSet(StrSql);
             GridView.DataSource = ds.Tables[0];
+            for (int i = 0; i < GridView.Rows.Count ; i++)
+            {
+                switch (GridView.Rows[i].Cells["EntBut"].Value.ToString())
+                {
+                    case "正在组装":
+                        GridView.Rows[i].Cells["bs"].Value = imageList1.Images[0];
+                        break;
+                    case "完成组装":
+                        GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
+                        break;
+                }
 
-
+            }
             rockontime();
-
 
 
         }
         private void rockontime()//进度条计时
         {
             string StrSql = $"exec sp_QueryH '{Modelcombo.Text}'";
-            if (AdoInterface.Readstr(StrSql)!=null )
+            if (AdoInterface.Readstr(StrSql) != null)
             {
                 int t = int.Parse(AdoInterface.Readstr(StrSql));
-                label4.Text = $"组装时长：{t / 60} 小时";
+              
+                TimeSpan ts = new TimeSpan(0, t, 0);
+                label7.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00");
                 PB.Maximum = t;
                 PB.Value = t;
-                timer1.Interval = 60000;
+                timer1.Interval = 1000;
                 timer1.Start();
             }
-           
-
 
         }
         string tempgvid = null;
@@ -191,10 +228,9 @@ namespace EM_Client
                 {
                     if (svstatus.Text == "Status：successful")
                     {
-
                         if (label3.Text == "")
                         {
-
+                            string StrSql = null;
                             if (GridView.CurrentRow.Cells["EntBut"].Value.ToString() != "完成组装")
                             {
                                 for (int i = 0; i < GridView.RowCount; i++)
@@ -203,17 +239,25 @@ namespace EM_Client
                                     {
                                         GridView.Rows[i].Cells["EntBut"].Value = "完成组装";
                                         GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
+                                        StrSql = $"exec sp_UpdateTempStepStatus '{int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString())}','完成组装'";
+                                        if (AdoInterface.InsertData(StrSql) == 0)
+                                        {
+                                            MessageBox.Show("数据库连接失败，无法更新状态！");
+                                        }
+
+
                                     }
-
                                 }
-
-
 
                                 GridView.CurrentRow.Cells["EntBut"].Value = "正在组装";
                                 GridView.CurrentRow.Cells["bs"].Value = imageList1.Images[0];
                                 tempgvid = GridView.CurrentRow.Cells["ID"].Value.ToString();
                                 sendmessage($"Operational#{StationLab.Text}#{GridView.CurrentRow.Cells["ID"].Value.ToString()}#100%");
-
+                                StrSql = $"exec sp_UpdateTempStepStatus '{int.Parse(tempgvid)}','正在组装'";
+                                if (AdoInterface.InsertData(StrSql) == 0)
+                                {
+                                    MessageBox.Show("数据库连接失败，无法更新状态！");
+                                }
                             }
                             else
                             {
@@ -230,6 +274,7 @@ namespace EM_Client
                     else
                     {
                         MessageBox.Show("服务端连接失败，请重试！");
+                        Tryconnect();
                     }
                 }
 
@@ -251,6 +296,7 @@ namespace EM_Client
             else
             {
                 MessageBox.Show("服务端连接失败，请重试！");
+                Tryconnect();
             }
         }
         int num;
@@ -261,15 +307,19 @@ namespace EM_Client
                 PB.Value = PB.Value - 1;
                 //  Perlabel.Text = ((PB.Value / PB.Maximum) * 100).ToString();
                 double percent = (double)PB.Value / PB.Maximum;
-                Perlabel.Text =percent.ToString ("0.0%");
+                Perlabel.Text = percent.ToString("0.0%");
+                TimeSpan ts = new TimeSpan(0, PB.Value, 0);
+                label5.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00");
                 num++;
-                if (num==10)
+                if (num == 10)
                 {
                     num = 0;
-                    sendmessage ($"Operational#{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
+                    if (svstatus.Text == "Status：successful")
+                    {
+                        sendmessage($"Operational#{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
+                    }
+
                 }
-                           
-                
             }
             else
             {
@@ -290,11 +340,34 @@ namespace EM_Client
                 PB.Maximum = 100; PB.Value = 100;
                 Perlabel.Text = "100%";
                 sendmessage($"Completed#{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
+                string StrSql = $"exec sp_UpdateStationStatus '{StationLab.Text}'";
+                if (AdoInterface.InsertData(StrSql) == 0)
+                {
+                    MessageBox.Show("数据库连接失败，无法更新状态！");
+                }
+
             }
             else
             {
                 MessageBox.Show("服务端连接失败，请重试！");
+                Tryconnect();
             }
         }
+
+        private void 等待组装ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (svstatus.Text == "Status：successful")
+            {
+                timer1.Enabled = false;                
+                sendmessage($"Unusual#{StationLab.Text}#0%#Waiting");
+            }
+            else
+            {
+                MessageBox.Show("服务端连接失败，请重试！");
+                Tryconnect();
+            }
+        }
+
+       
     }
 }

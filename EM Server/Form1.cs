@@ -16,9 +16,9 @@ namespace EM_Server
     {
         SocketManager _sm = null;
 
-       string ip ="10.194.48.150";
+       //string ip ="10.194.48.150";
         //string ip = "10.194.40.65";
-        //string ip = "127.0.0.1";
+        string ip = "127.0.0.1";
 
 
         int port = 1113;
@@ -32,6 +32,7 @@ namespace EM_Server
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.Hide();
             this.Text = this.Text + "-" + Application.ProductVersion;
             _sm = new SocketManager(ip, port);
             _sm.OnReceiveMsg += OnReceiveMsg;
@@ -63,6 +64,7 @@ namespace EM_Server
 
 
                 string tempjd = tjd;
+                listBox1.Items.Add ($"{tempStation}：{tempMes}：{tempjd}");
                 ledkanban(tempIP, tempStation, tempMes, tempjd);
 
             }
@@ -84,7 +86,7 @@ namespace EM_Server
             {
                 this.Invoke(new Action(() =>
                 {
-                    listBox1.Items.Add(AppendReceiveMsg(msg, ip));
+                   
                     string str = AppendReceiveMsg(msg, ip);
                     string[] sArray = str.Split('#');
                     if (sArray[0]=="Operational")
@@ -100,14 +102,7 @@ namespace EM_Server
                         AssyLoad(sArray[1], 0, sArray [2], sArray[3]+"              ");
                        // _scm.SendMsg($"Unusual#{StationLab.Text}#{str}#100%");
                     }
-
-
-                 
-
-
-
-                   
-                   
+                           
                 }));
             }
             else
@@ -123,7 +118,7 @@ namespace EM_Server
             {
                 this.Invoke(new Action(() => {
                     listBox1.Items.Add(clientIP + "  已连接至本机");    
-                    listView1.Items.Add(clientIP,0);
+                    listView1.Items.Add(ipstr,0);
                    
                 }));
             }
@@ -226,9 +221,9 @@ namespace EM_Server
             AreaRect.top = 0;
             AreaRect.width = 64;
             AreaRect.height = 16;
-            FontProp.FontSize = 8;
+            FontProp.FontSize = 10;
             LedDll.LV_AddSingleLineTextToImageTextArea(hProgram, 2, 1, ref AreaRect, 0);
-            nResult = LedDll.LV_AddStaticTextToImageTextArea(hProgram, 2, 1, LedDll.ADDTYPE_STRING, "Completion" , ref FontProp, 1, 2, 1);
+            nResult = LedDll.LV_AddStaticTextToImageTextArea(hProgram, 2, 1, LedDll.ADDTYPE_STRING, "Completed" , ref FontProp, 1, 2, 1);
             nResult = LedDll.LV_Send(ref CommunicationInfo, hProgram);
             LedDll.LV_DeleteProgram(hProgram);
             if (nResult != 0)
@@ -245,6 +240,25 @@ namespace EM_Server
 
         }
 
-      
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason==CloseReason.UserClosing )
+            {
+                e.Cancel = true;
+                this.Hide();
+            }
+        }
+
+        private void 显示窗体ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Show();
+        }
+
+        private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            this.Dispose();
+            Application.Exit();
+        }
     }
 }
