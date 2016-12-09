@@ -46,6 +46,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.站别绑定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.等待组装ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -67,10 +68,9 @@
             this.serstatus = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.等待组装ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.PBCS = new System.Windows.Forms.ProgressBar();
             this.label6 = new System.Windows.Forms.Label();
+            this.PBCS = new System.Windows.Forms.ProgressBar();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -78,6 +78,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -164,7 +165,7 @@
             this.toolStripLabel1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripLabel1.Name = "toolStripLabel1";
             this.toolStripLabel1.Size = new System.Drawing.Size(67, 40);
-            this.toolStripLabel1.Text = "剩余比例：";
+            this.toolStripLabel1.Text = "完成比例：";
             // 
             // toolStripSeparator5
             // 
@@ -202,9 +203,16 @@
             // 站别绑定ToolStripMenuItem
             // 
             this.站别绑定ToolStripMenuItem.Name = "站别绑定ToolStripMenuItem";
-            this.站别绑定ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.站别绑定ToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.站别绑定ToolStripMenuItem.Text = "站别绑定";
             this.站别绑定ToolStripMenuItem.Click += new System.EventHandler(this.站别绑定ToolStripMenuItem_Click);
+            // 
+            // 等待组装ToolStripMenuItem
+            // 
+            this.等待组装ToolStripMenuItem.Name = "等待组装ToolStripMenuItem";
+            this.等待组装ToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.等待组装ToolStripMenuItem.Text = "等待组装";
+            this.等待组装ToolStripMenuItem.Click += new System.EventHandler(this.等待组装ToolStripMenuItem_Click);
             // 
             // panel1
             // 
@@ -386,6 +394,7 @@
             // 
             // timer1
             // 
+            this.timer1.Interval = 1;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // serstatus
@@ -417,13 +426,6 @@
             this.label5.TabIndex = 0;
             this.label5.Text = "00:00";
             // 
-            // 等待组装ToolStripMenuItem
-            // 
-            this.等待组装ToolStripMenuItem.Name = "等待组装ToolStripMenuItem";
-            this.等待组装ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.等待组装ToolStripMenuItem.Text = "等待组装";
-            this.等待组装ToolStripMenuItem.Click += new System.EventHandler(this.等待组装ToolStripMenuItem_Click);
-            // 
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.SystemColors.AppWorkspace;
@@ -436,13 +438,6 @@
             this.panel3.TabIndex = 12;
             this.panel3.Visible = false;
             // 
-            // PBCS
-            // 
-            this.PBCS.Location = new System.Drawing.Point(45, 32);
-            this.PBCS.Name = "PBCS";
-            this.PBCS.Size = new System.Drawing.Size(225, 34);
-            this.PBCS.TabIndex = 0;
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -453,6 +448,13 @@
             this.label6.Size = new System.Drawing.Size(201, 15);
             this.label6.TabIndex = 1;
             this.label6.Text = "尝试与服务端再次连接，请稍后...";
+            // 
+            // PBCS
+            // 
+            this.PBCS.Location = new System.Drawing.Point(45, 32);
+            this.PBCS.Name = "PBCS";
+            this.PBCS.Size = new System.Drawing.Size(225, 34);
+            this.PBCS.TabIndex = 0;
             // 
             // timer2
             // 
@@ -519,6 +521,10 @@
             this.label7.Size = new System.Drawing.Size(166, 58);
             this.label7.TabIndex = 0;
             this.label7.Text = "00:00";
+            // 
+            // timer3
+            // 
+            this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
             // Form1
             // 
@@ -615,6 +621,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Timer timer3;
     }
 }
 

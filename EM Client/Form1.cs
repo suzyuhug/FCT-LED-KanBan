@@ -13,13 +13,12 @@ namespace EM_Client
     public partial class Form1 : Form
     {
         ClientManager _scm = null;
-        string ip = "127.0.0.1";
+        string ip = "10.194.48.150";
         int port = 1113;
         public Form1()
         {
             InitializeComponent();
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Text = this.Text + "-" + Application.ProductVersion;
@@ -34,7 +33,26 @@ namespace EM_Client
             }
             else if (statusID == "1")
             {
+                loadtempmodel();
                 button2_Click(sender, e);
+                loadtime();
+            }
+        }
+        private void loadtempmodel()//加载临时Model
+        {
+            string StrSql = $"exec sp_TempModel '{StationLab .Text}'";
+            if (AdoInterface.Readstr(StrSql) != null)
+            {
+                 label2.Text =AdoInterface.Readstr(StrSql);                         
+            }
+        }
+        private void loadtime()//加载剩余时间
+        {
+            string StrSql = $"exec sp_LoadTime '{StationLab.Text}'";
+            if (AdoInterface.Readstr(StrSql) != null)
+            {
+                int t = int.Parse(AdoInterface.Readstr(StrSql));               
+                PB.Value = PB.Value-t;               
             }
         }
         private void Tryconnect()//尝试再次连接
@@ -46,7 +64,6 @@ namespace EM_Client
             timer2.Interval = 100;
             timer2.Start();
             panel3.Visible = true;
-
         }
         private void timer2_Tick(object sender, EventArgs e)
         {
@@ -64,13 +81,14 @@ namespace EM_Client
                     timer2.Enabled = false;
                 }
             }
-
-
         }
         private void Station()//查询当前电脑绑定的Station
         {
             string Strsql = $"exec sp_Station_Find '{Dns.GetHostName()}'";
-            StationLab.Text = AdoInterface.Readstr(Strsql);
+            if (AdoInterface.Readstr(Strsql) != null)
+            {
+                StationLab.Text = AdoInterface.Readstr(Strsql);
+            }
         }
 
         private void pageset()//页面布局设置
@@ -80,11 +98,7 @@ namespace EM_Client
             panel1.Top = 80;
             panel1.Left = 30;
             panel1.Visible = true;
-
-
         }
-
-
         private void modellist()//加载Model comlist数据
         {
             string Strsql = $"exec sp_ModelList '{StationLab.Text}'";
@@ -93,10 +107,8 @@ namespace EM_Client
             if (ds != null)
             {
                 Modelcombo.DataSource = ds.Tables[0];
-                Modelcombo.DisplayMember = "Model";
+                Modelcombo.DisplayMember = "Model";                              
             }
-
-
         }
         private void sendmessage(string message)
         {
@@ -154,9 +166,6 @@ namespace EM_Client
                 serstatus.Text = "服务器连接失败";
             }
         }
-
-
-
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (!_scm._socket.Connected) return;
@@ -170,7 +179,6 @@ namespace EM_Client
         {
             StationSetting SetFrm = new EM_Client.StationSetting();
             SetFrm.ShowDialog();
-            //StationLab.Text = Properties.Settings.Default.Station;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -181,8 +189,11 @@ namespace EM_Client
             panel2.Left = 15;
             panel1.Visible = false;
             panel2.Visible = true;
-            label2.Text = Modelcombo.Text;
-            string StrSql = $"exec sp_AssyStep '{Modelcombo.Text}','{StationLab.Text}'";
+            if (label2.Text == "Station")
+            {
+                label2.Text = Modelcombo.Text;
+            }          
+            string StrSql = $"exec sp_AssyStep '{label2.Text}','{StationLab.Text}'";
             DataSet ds = new DataSet();
             ds = AdoInterface.GetDataSet(StrSql);
             GridView.DataSource = ds.Tables[0];
@@ -197,27 +208,22 @@ namespace EM_Client
                         GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
                         break;
                 }
-
             }
             rockontime();
-
-
         }
         private void rockontime()//进度条计时
         {
-            string StrSql = $"exec sp_QueryH '{Modelcombo.Text}'";
+            string StrSql = $"exec sp_QueryH '{label2.Text}'";
             if (AdoInterface.Readstr(StrSql) != null)
             {
-                int t = int.Parse(AdoInterface.Readstr(StrSql));
-              
+                int t = int.Parse(AdoInterface.Readstr(StrSql));              
                 TimeSpan ts = new TimeSpan(0, t, 0);
                 label7.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00");
                 PB.Maximum = t;
                 PB.Value = t;
-                timer1.Interval = 1000;
+                timer1.Interval = 60000;
                 timer1.Start();
             }
-
         }
         string tempgvid = null;
         private void GridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -244,8 +250,6 @@ namespace EM_Client
                                         {
                                             MessageBox.Show("数据库连接失败，无法更新状态！");
                                         }
-
-
                                     }
                                 }
 
@@ -277,8 +281,6 @@ namespace EM_Client
                         Tryconnect();
                     }
                 }
-
-
             }
         }
 
@@ -292,6 +294,8 @@ namespace EM_Client
                 string str = AdoInterface.FrmfailMes;
                 label3.Text = str;
                 sendmessage($"Unusual#{StationLab.Text}#{Perlabel.Text}#{str}");
+                timer3.Interval = 1000;
+                timer3.Start();
             }
             else
             {
@@ -305,8 +309,7 @@ namespace EM_Client
             if (PB.Value > 0)
             {
                 PB.Value = PB.Value - 1;
-                //  Perlabel.Text = ((PB.Value / PB.Maximum) * 100).ToString();
-                double percent = (double)PB.Value / PB.Maximum;
+                double percent = (double)(PB.Maximum -PB.Value) / PB.Maximum;
                 Perlabel.Text = percent.ToString("0.0%");
                 TimeSpan ts = new TimeSpan(0, PB.Value, 0);
                 label5.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00");
@@ -318,7 +321,6 @@ namespace EM_Client
                     {
                         sendmessage($"Operational#{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
                     }
-
                 }
             }
             else
@@ -326,8 +328,6 @@ namespace EM_Client
                 timer1.Enabled = false;
                 MessageBox.Show("down");
             }
-
-
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -340,12 +340,13 @@ namespace EM_Client
                 PB.Maximum = 100; PB.Value = 100;
                 Perlabel.Text = "100%";
                 sendmessage($"Completed#{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
+                label2.Text = "Station";
                 string StrSql = $"exec sp_UpdateStationStatus '{StationLab.Text}'";
                 if (AdoInterface.InsertData(StrSql) == 0)
                 {
                     MessageBox.Show("数据库连接失败，无法更新状态！");
                 }
-
+                label5.Text = "00:00";label7.Text = "00:00";
             }
             else
             {
@@ -367,7 +368,26 @@ namespace EM_Client
                 Tryconnect();
             }
         }
-
-       
+        int yctime = 0;
+        private void timer3_Tick(object sender, EventArgs e)
+        {
+            if (label3.Text != "")
+            {
+                yctime++;
+                button3.Text = $"异 常  {yctime}";
+            }
+            else
+            {
+                timer3.Enabled = false;
+               
+                button3.Text = "异 常";
+                string StrSql = $"exec sp_UpdateWaitingTime '{yctime}','{StationLab.Text}'";
+                if (AdoInterface.InsertData(StrSql) == 0)
+                {
+                    MessageBox.Show("数据库连接失败，无法更新状态！");
+                }
+                yctime = 0;
+            }
+        }
     }
 }

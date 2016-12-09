@@ -72,7 +72,7 @@ namespace EM_Server
                     //这里向系统投递一个接收信息的请求，并为其指定ReceiveCallBack做为回调函数 
                     sInfo.socket.BeginReceive(sInfo.buffer, 0, sInfo.buffer.Length, SocketFlags.None, ReceiveCallBack, sInfo.socket.RemoteEndPoint);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return;
                 }
@@ -97,7 +97,7 @@ namespace EM_Server
                 if (info.socket == null) return;
                 readCount = info.socket.EndReceive(ar);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
             }

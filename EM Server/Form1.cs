@@ -16,9 +16,9 @@ namespace EM_Server
     {
         SocketManager _sm = null;
 
-       //string ip ="10.194.48.150";
+       string ip ="10.194.48.150";
         //string ip = "10.194.40.65";
-        string ip = "127.0.0.1";
+       // string ip = "127.0.0.1";
 
 
         int port = 1113;
@@ -146,9 +146,9 @@ namespace EM_Server
             {
                 this.Invoke(new Action(() =>
                 {
-                     listBox1.Items.Add(clientIp + "  已断开连接"); 
-                   
-                    deluser(clientIp);
+                     listBox1.Items.Add(clientIp + "  已断开连接");
+                    string ipstr = clientIp.Split(':')[0];
+                    deluser(ipstr);
                 }));
             }
             else
