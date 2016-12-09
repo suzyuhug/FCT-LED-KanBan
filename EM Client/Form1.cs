@@ -13,7 +13,7 @@ namespace EM_Client
     public partial class Form1 : Form
     {
         ClientManager _scm = null;
-        string ip = "10.194.48.150";
+        string ip = "127.0.0.1";
         int port = 1113;
         public Form1()
         {
@@ -52,7 +52,11 @@ namespace EM_Client
             if (AdoInterface.Readstr(StrSql) != null)
             {
                 int t = int.Parse(AdoInterface.Readstr(StrSql));               
-                PB.Value = PB.Value-t;               
+                PB.Value = PB.Value-t;
+                //double percent = (double)(PB.Maximum - PB.Value) / PB.Maximum;
+                //Perlabel.Text = percent.ToString("0.0%");
+                //TimeSpan ts = new TimeSpan(0, PB.Value, 0);
+                //label5.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00");
             }
         }
         private void Tryconnect()//尝试再次连接
@@ -199,10 +203,15 @@ namespace EM_Client
             GridView.DataSource = ds.Tables[0];
             for (int i = 0; i < GridView.Rows.Count ; i++)
             {
+                if (GridView.Rows[i].Cells["EntBut"].Value.ToString() == "正在组装")
+                {
+                    tempgvid = GridView.Rows[i].Cells["ID"].Value.ToString();
+                }
                 switch (GridView.Rows[i].Cells["EntBut"].Value.ToString())
                 {
                     case "正在组装":
                         GridView.Rows[i].Cells["bs"].Value = imageList1.Images[0];
+                       
                         break;
                     case "完成组装":
                         GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
@@ -219,8 +228,12 @@ namespace EM_Client
                 int t = int.Parse(AdoInterface.Readstr(StrSql));              
                 TimeSpan ts = new TimeSpan(0, t, 0);
                 label7.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00");
+              //  label5.Text = label7.Text;
+               // Perlabel.Text = "0%";
                 PB.Maximum = t;
                 PB.Value = t;
+                num = 8;
+                time1click();
                 timer1.Interval = 60000;
                 timer1.Start();
             }
@@ -256,7 +269,7 @@ namespace EM_Client
                                 GridView.CurrentRow.Cells["EntBut"].Value = "正在组装";
                                 GridView.CurrentRow.Cells["bs"].Value = imageList1.Images[0];
                                 tempgvid = GridView.CurrentRow.Cells["ID"].Value.ToString();
-                                sendmessage($"Operational#{StationLab.Text}#{GridView.CurrentRow.Cells["ID"].Value.ToString()}#100%");
+                                sendmessage($"Operational#{StationLab.Text}#{GridView.CurrentRow.Cells["ID"].Value.ToString()}#{Perlabel.Text}");
                                 StrSql = $"exec sp_UpdateTempStepStatus '{int.Parse(tempgvid)}','正在组装'";
                                 if (AdoInterface.InsertData(StrSql) == 0)
                                 {
@@ -306,14 +319,19 @@ namespace EM_Client
         int num;
         private void timer1_Tick(object sender, EventArgs e)
         {
+            time1click();
+        }
+        private void time1click()
+        {
             if (PB.Value > 0)
             {
                 PB.Value = PB.Value - 1;
-                double percent = (double)(PB.Maximum -PB.Value) / PB.Maximum;
+                double percent = (double)(PB.Maximum - PB.Value) / PB.Maximum;
                 Perlabel.Text = percent.ToString("0.0%");
                 TimeSpan ts = new TimeSpan(0, PB.Value, 0);
                 label5.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00");
                 num++;
+
                 if (num == 10)
                 {
                     num = 0;
@@ -326,8 +344,9 @@ namespace EM_Client
             else
             {
                 timer1.Enabled = false;
-                MessageBox.Show("down");
+                MessageBox.Show("组装完成");
             }
+
         }
 
         private void button4_Click(object sender, EventArgs e)

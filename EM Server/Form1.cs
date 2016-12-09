@@ -16,9 +16,9 @@ namespace EM_Server
     {
         SocketManager _sm = null;
 
-       string ip ="10.194.48.150";
+       //string ip ="10.194.48.150";
         //string ip = "10.194.40.65";
-       // string ip = "127.0.0.1";
+        string ip = "127.0.0.1";
 
 
         int port = 1113;
