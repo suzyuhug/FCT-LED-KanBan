@@ -307,7 +307,7 @@ namespace EM_Client
                 string str = AdoInterface.FrmfailMes;
                 label3.Text = str;
                 sendmessage($"Unusual#{StationLab.Text}#{Perlabel.Text}#{str}");
-                timer3.Interval = 1000;
+                timer3.Interval = 60000;
                 timer3.Start();
             }
             else
