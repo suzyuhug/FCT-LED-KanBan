@@ -19,6 +19,7 @@ namespace EM_Client
         {
             InitializeComponent();
         }
+        bool cl = false;
         private void Form1_Load(object sender, EventArgs e)
         {
             UpdateClass.UpdateFrom("FCT-LED-Client");
@@ -38,6 +39,7 @@ namespace EM_Client
                 button2_Click(sender, e);
                 loadtime();
             }
+            cl = true;
         }
         private void loadtempmodel()//加载临时Model
         {
@@ -172,11 +174,16 @@ namespace EM_Client
         }
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (!_scm._socket.Connected) return;
-            _scm._isConnected = false;
-            _scm.SendMsg("\0\0\0faild");
-            _scm._socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
-            _scm._socket.Close();
+            if (cl)
+            {
+                if (!_scm._socket.Connected) return;
+                _scm._isConnected = false;
+                _scm.SendMsg("\0\0\0faild");
+                _scm._socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                _scm._socket.Close();
+
+            }
+           
         }
 
         private void 站别绑定ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -344,13 +351,18 @@ namespace EM_Client
             }
             else
             {
-                timer1.Enabled = false;
+                dome();
                 MessageBox.Show("组装完成");
+
             }
 
         }
 
         private void button4_Click(object sender, EventArgs e)
+        {
+            dome();
+        }
+        private void dome()
         {
             if (svstatus.Text == "Status：successful")
             {
@@ -366,13 +378,15 @@ namespace EM_Client
                 {
                     MessageBox.Show("数据库连接失败，无法更新状态！");
                 }
-                label5.Text = "00:00";label7.Text = "00:00";
+                label5.Text = "00:00"; label7.Text = "00:00";
             }
             else
             {
                 MessageBox.Show("服务端连接失败，请重试！");
                 Tryconnect();
             }
+
+
         }
 
         private void 等待组装ToolStripMenuItem_Click(object sender, EventArgs e)
