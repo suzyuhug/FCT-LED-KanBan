@@ -42,22 +42,20 @@ namespace EM_Client
         private void loadtempmodel()//加载临时Model
         {
             string StrSql = $"exec sp_TempModel '{StationLab .Text}'";
-            if (AdoInterface.Readstr(StrSql) != null)
+            string str = AdoInterface.Readstr(StrSql);
+            if (str != null)
             {
-                 label2.Text =AdoInterface.Readstr(StrSql);                         
+                 label2.Text =str;                         
             }
         }
         private void loadtime()//加载剩余时间
         {
             string StrSql = $"exec sp_LoadTime '{StationLab.Text}'";
-            if (AdoInterface.Readstr(StrSql) != null)
+            string str = AdoInterface.Readstr(StrSql);
+            if (str != null)
             {
-                int t = int.Parse(AdoInterface.Readstr(StrSql));               
+                int t = int.Parse(str);               
                 PB.Value = PB.Value-t;
-                //double percent = (double)(PB.Maximum - PB.Value) / PB.Maximum;
-                //Perlabel.Text = percent.ToString("0.0%");
-                //TimeSpan ts = new TimeSpan(0, PB.Value, 0);
-                //label5.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00");
             }
         }
         private void Tryconnect()//尝试再次连接
@@ -90,9 +88,10 @@ namespace EM_Client
         private void Station()//查询当前电脑绑定的Station
         {
             string Strsql = $"exec sp_Station_Find '{Dns.GetHostName()}'";
-            if (AdoInterface.Readstr(Strsql) != null)
+            string str = AdoInterface.Readstr(Strsql);
+            if (str != null)
             {
-                StationLab.Text = AdoInterface.Readstr(Strsql);
+                StationLab.Text = str;
             }
         }
 
@@ -224,9 +223,10 @@ namespace EM_Client
         private void rockontime()//进度条计时
         {
             string StrSql = $"exec sp_QueryH '{label2.Text}'";
-            if (AdoInterface.Readstr(StrSql) != null)
+            string str = AdoInterface.Readstr(StrSql);
+            if (str != null)
             {
-                int t = int.Parse(AdoInterface.Readstr(StrSql));              
+                int t = int.Parse(str);              
                 TimeSpan ts = new TimeSpan(0, t, 0);
                 label7.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00");
               //  label5.Text = label7.Text;
