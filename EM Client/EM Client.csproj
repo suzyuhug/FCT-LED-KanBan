@@ -84,6 +84,7 @@
     <Compile Include="StationSetting.Designer.cs">
       <DependentUpon>StationSetting.cs</DependentUpon>
     </Compile>
+    <Compile Include="UpdateClass.cs" />
     <EmbeddedResource Include="FaFrm.resx">
       <DependentUpon>FaFrm.cs</DependentUpon>
     </EmbeddedResource>

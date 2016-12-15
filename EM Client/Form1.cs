@@ -13,7 +13,7 @@ namespace EM_Client
     public partial class Form1 : Form
     {
         ClientManager _scm = null;
-        string ip = "127.0.0.1";
+        string ip = "10.194.48.150";
         int port = 1113;
         public Form1()
         {
@@ -21,6 +21,7 @@ namespace EM_Client
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+            UpdateClass.UpdateFrom("FCT-LED-Client");
             this.Text = this.Text + "-" + Application.ProductVersion;
             Station();
             InitSocket();
