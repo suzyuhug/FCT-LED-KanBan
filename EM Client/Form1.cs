@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace EM_Client
@@ -56,9 +57,29 @@ namespace EM_Client
             string str = AdoInterface.Readstr(StrSql);
             if (str != null)
             {
-                int t = int.Parse(str);               
-                PB.Value = PB.Value-t;
+                int t = int.Parse(str);
+                if (t<PB.Value)
+                {
+                    PB.Value = PB.Value - t;
+                }
+                else
+                {
+                    Thread th = new Thread(loaddome);
+                    th.Start();
+                   
+                    
+                }
+
             }
+        }
+        private void loaddome()
+        {
+            Thread.Sleep(1000);
+            this.Invoke((EventHandler)delegate
+            {
+               
+                dome();
+            });
         }
         private void Tryconnect()//尝试再次连接
         {
