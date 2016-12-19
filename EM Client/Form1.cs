@@ -146,8 +146,7 @@ namespace EM_Client
                     _scm.SendMsg(message);
                 }
                 catch (Exception)
-                {
-                    MessageBox.Show("服务器断开连接，请重试！");
+                {                                       
                     svstatus.Text = "连接失败";
                     Tryconnect();
                 }
@@ -319,7 +318,6 @@ namespace EM_Client
                     }
                     else
                     {
-                        MessageBox.Show("服务端连接失败，请重试！");
                         Tryconnect();
                     }
                 }
