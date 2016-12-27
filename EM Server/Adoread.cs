@@ -10,7 +10,7 @@ namespace EM_Server
     class Adoread
     {
 
-        static string SqlData = "server=10.194.48.150\\MySQL;database=FCT_LED_KanBan;uid=sa;pwd=Aa123456;Connection Timeout=3";
+        static string SqlData = "server=suznt004;database=FCT_LED_KanBan;uid=andy;pwd=123;Connection Timeout=3";
 
         public static DataSet GetDataSet(string strSql)
         {
