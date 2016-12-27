@@ -16,9 +16,9 @@ namespace EM_Server
     {
         SocketManager _sm = null;
 
-       //string ip ="10.194.48.150";
+       string ip ="10.194.48.150";
         //string ip = "10.194.40.65";
-        string ip = "127.0.0.1";
+       // string ip = "127.0.0.1";
 
 
         int port = 1113;
@@ -192,7 +192,7 @@ namespace EM_Server
             AreaRect.height = 16;
             LedDll.FONTPROP FontProp = new LedDll.FONTPROP();
             FontProp.FontName = "Arial";
-            FontProp.FontSize = 12;
+            FontProp.FontSize = 10;
             FontProp.FontColor = LedDll.COLOR_GREEN;
             FontProp.FontBold = 0;
             nResult = LedDll.LV_QuickAddSingleLineTextArea(hProgram, 1, 1, ref AreaRect, LedDll.ADDTYPE_STRING, message , ref FontProp, 4);
@@ -209,7 +209,7 @@ namespace EM_Server
             AreaRect.width = 64;
             AreaRect.height = 16;
             FontProp.FontName = "Arial";
-            FontProp.FontSize = 12;
+            FontProp.FontSize = 10;
             FontProp.FontColor = LedDll.COLOR_GREEN;
             FontProp.FontBold = 0;
             LedDll.LV_AddSingleLineTextToImageTextArea(hProgram, 2, 2, ref AreaRect, 0);
