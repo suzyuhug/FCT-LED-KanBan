@@ -286,11 +286,7 @@ namespace EM_Client
                                     {
                                         GridView.Rows[i].Cells["EntBut"].Value = "完成组装";
                                         GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
-                                        StrSql = $"exec sp_UpdateTempStepStatus '{int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString())}','完成组装'";
-                                        if (AdoInterface.InsertData(StrSql) == 0)
-                                        {
-                                            MessageBox.Show("数据库连接失败，无法更新状态！");
-                                        }
+                                        StrSql =$"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString())}','完成组装';";                                        
                                     }
                                 }
 
@@ -298,7 +294,7 @@ namespace EM_Client
                                 GridView.CurrentRow.Cells["bs"].Value = imageList1.Images[0];
                                 tempgvid = GridView.CurrentRow.Cells["ID"].Value.ToString();
                                 sendmessage($"Operational#{StationLab.Text}#{GridView.CurrentRow.Cells["ID"].Value.ToString()}#{Perlabel.Text}");
-                                StrSql = $"exec sp_UpdateTempStepStatus '{int.Parse(tempgvid)}','正在组装'";
+                                StrSql = $"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(tempgvid)}','正在组装';";
                                 if (AdoInterface.InsertData(StrSql) == 0)
                                 {
                                     MessageBox.Show("数据库连接失败，无法更新状态！");
