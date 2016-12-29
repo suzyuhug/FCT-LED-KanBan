@@ -70,6 +70,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.comboBox1);
             this.Name = "FaFrm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "异常处理";
             this.Load += new System.EventHandler(this.FaFrm_Load);
             this.ResumeLayout(false);
