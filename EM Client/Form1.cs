@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -286,7 +287,8 @@ namespace EM_Client
                                     {
                                         GridView.Rows[i].Cells["EntBut"].Value = "完成组装";
                                         GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
-                                        StrSql =$"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString())}','完成组装';";                                        
+                                        StrSql =$"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString())}','完成组装';";
+                                        sicconfig(int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString()));
                                     }
                                 }
 
@@ -299,6 +301,7 @@ namespace EM_Client
                                 {
                                     MessageBox.Show("数据库连接失败，无法更新状态！");
                                 }
+                               
                             }
                             else
                             {
@@ -438,5 +441,27 @@ namespace EM_Client
                 yctime = 0;
             }
         }
+
+
+        private void sicconfig(int id)
+        {
+            string strsql = $"exec sp_sicconfigquery '{id}'";
+            DataSet ds = new DataSet();
+            ds = AdoInterface.GetDataSet(strsql);
+            if (ds!=null)
+            {
+                INIHelper.Path = $"{Application.StartupPath.ToString()}\\ESIC_Client\\SICSetting.ini";
+                INIHelper.Write("setting", "Project", ds.Tables[0].Rows[0]["Project"].ToString());
+                INIHelper.Write("setting", "Category", ds.Tables[0].Rows[0]["Category"].ToString());
+                INIHelper.Write("setting", "Model", ds.Tables[0].Rows[0]["Model"].ToString());
+                INIHelper.Write("setting", "Side", ds.Tables[0].Rows[0]["Side"].ToString());
+                INIHelper.Write("setting", "Station", ds.Tables[0].Rows[0]["Station"].ToString());
+                FileStream fs = new FileStream($"{Application.StartupPath.ToString()}\\ESIC_Client\\SICStart.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                fs.Dispose();
+                fs.Close();
+            }          
+        }
+
+       
     }
 }
