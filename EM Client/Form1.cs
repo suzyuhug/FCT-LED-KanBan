@@ -288,7 +288,7 @@ namespace EM_Client
                                         GridView.Rows[i].Cells["EntBut"].Value = "完成组装";
                                         GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
                                         StrSql =$"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString())}','完成组装';";
-                                        sicconfig(int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString()));
+                                        
                                     }
                                 }
 
@@ -301,7 +301,7 @@ namespace EM_Client
                                 {
                                     MessageBox.Show("数据库连接失败，无法更新状态！");
                                 }
-                               
+                                sicconfig(int.Parse(GridView.CurrentRow.Cells["ID"].Value.ToString()));
                             }
                             else
                             {
