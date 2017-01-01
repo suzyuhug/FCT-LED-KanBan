@@ -301,6 +301,7 @@ namespace EM_Client
                                 {
                                     MessageBox.Show("数据库连接失败，无法更新状态！");
                                 }
+                                
                                 sicconfig(int.Parse(GridView.CurrentRow.Cells["ID"].Value.ToString()));
                             }
                             else
@@ -448,7 +449,7 @@ namespace EM_Client
             string strsql = $"exec sp_sicconfigquery '{id}'";
             DataSet ds = new DataSet();
             ds = AdoInterface.GetDataSet(strsql);
-            if (ds!=null)
+            if (ds.Tables[0].Rows.Count >0)
             {
                 INIHelper.Path = $"{Application.StartupPath.ToString()}\\ESIC_Client\\SICSetting.ini";
                 INIHelper.Write("setting", "Project", ds.Tables[0].Rows[0]["Project"].ToString());
