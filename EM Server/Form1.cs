@@ -41,7 +41,7 @@ namespace EM_Server
             _sm.Start();
             init();
         }
-        private void AssyLoad(string St, int id, string tjd, string mes)//发送组装信息
+        private void AssyLoad(string St, int id, string tjd, string mes,string strcolor)//发送组装信息
         {
             string Strsql = $"exec sp_AssyLoad '{St}','{id}'";
             DataSet ds = new DataSet();
@@ -65,7 +65,7 @@ namespace EM_Server
 
                 string tempjd = tjd;
                 listBox1.Items.Add ($"{tempStation}：{tempMes}：{tempjd}");
-                ledkanban(tempIP, tempStation, tempMes, tempjd);
+                ledkanban(tempIP, tempStation, tempMes, tempjd,strcolor);
 
             }
         }
@@ -91,15 +91,15 @@ namespace EM_Server
                     string[] sArray = str.Split('#');
                     if (sArray[0]=="Operational")
                     {
-                        AssyLoad(sArray[1], int.Parse(sArray[2]), sArray[3],null);
+                        AssyLoad(sArray[1], int.Parse(sArray[2]), sArray[3],null,"g");
                     }
                     else if (sArray[0] == "Completed")
                     {
-                        AssyLoad(sArray[1], int.Parse(sArray[2]), "100%","Completed                ");
+                        AssyLoad(sArray[1], int.Parse(sArray[2]), "100%","Completed                ","g");
                     }
                     else if (sArray[0] == "Unusual")
                     {
-                        AssyLoad(sArray[1], 0, sArray [2], sArray[3]+"              ");
+                        AssyLoad(sArray[1], 0, sArray [2], sArray[3]+"              ","r");
                        // _scm.SendMsg($"Unusual#{StationLab.Text}#{str}#100%");
                     }
                            
@@ -168,7 +168,7 @@ namespace EM_Server
 
       
 
-        private void ledkanban(string TempIP,string Tempst,string message,string Jd)
+        private void ledkanban(string TempIP,string Tempst,string message,string Jd,string strcolor)
         {
             int nResult;
             LedDll.COMMUNICATIONINFO CommunicationInfo = new LedDll.COMMUNICATIONINFO();
@@ -193,7 +193,15 @@ namespace EM_Server
             LedDll.FONTPROP FontProp = new LedDll.FONTPROP();
             FontProp.FontName = "Arial";
             FontProp.FontSize = 10;
-            FontProp.FontColor = LedDll.COLOR_GREEN;
+            if (strcolor =="r")
+            {
+FontProp.FontColor = LedDll.COLOR_RED;
+            }
+            else if(strcolor=="g")
+            {
+                FontProp.FontColor = LedDll.COLOR_GREEN;
+            }
+            
             FontProp.FontBold = 0;
             nResult = LedDll.LV_QuickAddSingleLineTextArea(hProgram, 1, 1, ref AreaRect, LedDll.ADDTYPE_STRING, message , ref FontProp, 4);
             AreaRect.left = 0;
