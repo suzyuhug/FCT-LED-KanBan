@@ -102,7 +102,12 @@ namespace EM_Server
                         AssyLoad(sArray[1], 0, sArray [2], sArray[3]+"              ","r");
                        // _scm.SendMsg($"Unusual#{StationLab.Text}#{str}#100%");
                     }
-                           
+                    else if (sArray[0] == "Waiting")
+                    {
+                        AssyLoad(sArray[1], 0, sArray[2], sArray[3] + "              ", "g");
+                        // _scm.SendMsg($"Unusual#{StationLab.Text}#{str}#100%");
+                    }
+
                 }));
             }
             else

@@ -217,7 +217,7 @@ namespace EM_Client
         {
             panel2.Width = 500;
             panel2.Height = 430;
-            panel2.Top = 60;
+            panel2.Top = 30;
             panel2.Left = 15;
             panel1.Visible = false;
             panel2.Visible = true;
@@ -268,6 +268,7 @@ namespace EM_Client
             }
         }
         string tempgvid = null;
+        string gmeg = null;
         private void GridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (GridView.RowCount > 0)
@@ -276,7 +277,7 @@ namespace EM_Client
                 {
                     if (svstatus.Text == "Status：successful")
                     {
-                        if (label3.Text == "")
+                        if (bl)
                         {
                             string StrSql = null;
                             if (GridView.CurrentRow.Cells["EntBut"].Value.ToString() != "完成组装")
@@ -287,15 +288,16 @@ namespace EM_Client
                                     {
                                         GridView.Rows[i].Cells["EntBut"].Value = "完成组装";
                                         GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
-                                        StrSql =$"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString())}','完成组装';";
-                                        
+                                        StrSql =$"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString())}','完成组装';";                                        
                                     }
                                 }
 
                                 GridView.CurrentRow.Cells["EntBut"].Value = "正在组装";
                                 GridView.CurrentRow.Cells["bs"].Value = imageList1.Images[0];
                                 tempgvid = GridView.CurrentRow.Cells["ID"].Value.ToString();
-                                sendmessage($"Operational#{StationLab.Text}#{GridView.CurrentRow.Cells["ID"].Value.ToString()}#{Perlabel.Text}");
+                                string str = $"Operational#{StationLab.Text}#{GridView.CurrentRow.Cells["ID"].Value.ToString()}#{Perlabel.Text}";
+                                sendmessage(str);
+                                gmeg = str;
                                 StrSql = $"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(tempgvid)}','正在组装';";
                                 if (AdoInterface.InsertData(StrSql) == 0)
                                 {
@@ -312,8 +314,8 @@ namespace EM_Client
                         else
                         {
                             MessageBox.Show("有异常信息在进行中");
-                            label3.Text = "";
-                            timer1.Enabled = true;
+                            //label3.Text = "";
+                            //timer1.Enabled = true;
                         }
                     }
                     else
@@ -323,25 +325,44 @@ namespace EM_Client
                 }
             }
         }
-
+        Boolean bl=true;
         private void button3_Click(object sender, EventArgs e)
         {
-            if (svstatus.Text == "Status：successful")
+            if (button3.BackColor != Color.Red)
             {
-                timer1.Enabled = false;
-                FaFrm Fa = new EM_Client.FaFrm();
-                Fa.ShowDialog();
-                string str = AdoInterface.FrmfailMes;
-                label3.Text = str;
-                sendmessage($"Unusual#{StationLab.Text}#{Perlabel.Text}#{str}");
-                timer3.Interval = 60000;
-                timer3.Start();
+                if (svstatus.Text == "Status：successful")
+                {
+                    timer1.Enabled = false;
+                    FaFrm Fa = new EM_Client.FaFrm();
+                    Fa.ShowDialog();
+                    string str = AdoInterface.FrmfailMes;
+                    label3.Text = str;
+                    sendmessage($"Unusual#{StationLab.Text}#{Perlabel.Text}#{str}");
+                    button3.BackColor = Color.Red;
+                    bl = false;
+                    timer3.Interval = 60000;
+                    timer3.Start();
+                }
+                else
+                {
+                    MessageBox.Show("服务端连接失败，请重试！");
+                    Tryconnect();
+                }
             }
             else
             {
-                MessageBox.Show("服务端连接失败，请重试！");
-                Tryconnect();
+                button3.BackColor = SystemColors.Control;
+                bl = true;
+                label3.Text = "";
+                timer1.Enabled = true;
+                if (gmeg!=null)
+                {
+ sendmessage(gmeg);
+                }
+               
             }
+
+
         }
         int num;
         private void timer1_Tick(object sender, EventArgs e)
@@ -413,7 +434,7 @@ namespace EM_Client
             if (svstatus.Text == "Status：successful")
             {
                 timer1.Enabled = false;                
-                sendmessage($"Unusual#{StationLab.Text}#0%#Waiting");
+                sendmessage($"Waiting#{StationLab.Text}#0%#Waiting");
             }
             else
             {

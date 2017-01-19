@@ -219,9 +219,9 @@
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.Modelcombo);
-            this.panel1.Location = new System.Drawing.Point(208, 33);
+            this.panel1.Location = new System.Drawing.Point(546, 85);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(43, 30);
+            this.panel1.Size = new System.Drawing.Size(31, 26);
             this.panel1.TabIndex = 6;
             this.panel1.Visible = false;
             // 
@@ -266,12 +266,11 @@
             // panel2
             // 
             this.panel2.Controls.Add(this.label3);
-            this.panel2.Controls.Add(this.button4);
             this.panel2.Controls.Add(this.button3);
             this.panel2.Controls.Add(this.GridView);
-            this.panel2.Location = new System.Drawing.Point(12, 85);
+            this.panel2.Location = new System.Drawing.Point(12, 33);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(549, 394);
+            this.panel2.Size = new System.Drawing.Size(509, 422);
             this.panel2.TabIndex = 8;
             this.panel2.Visible = false;
             // 
@@ -287,17 +286,17 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(378, 237);
+            this.button4.Location = new System.Drawing.Point(239, 458);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(111, 54);
+            this.button4.Size = new System.Drawing.Size(111, 27);
             this.button4.TabIndex = 2;
-            this.button4.Text = "完  成";
+            this.button4.Text = "结束组装";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(378, 87);
+            this.button3.Location = new System.Drawing.Point(370, 87);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(111, 54);
             this.button3.TabIndex = 1;
@@ -336,7 +335,7 @@
             this.GridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.GridView.RowTemplate.Height = 25;
             this.GridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.GridView.Size = new System.Drawing.Size(336, 388);
+            this.GridView.Size = new System.Drawing.Size(336, 416);
             this.GridView.TabIndex = 0;
             this.GridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridView_CellContentClick);
             // 
@@ -432,9 +431,9 @@
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.label6);
             this.panel3.Controls.Add(this.PBCS);
-            this.panel3.Location = new System.Drawing.Point(281, 35);
+            this.panel3.Location = new System.Drawing.Point(556, 27);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(39, 28);
+            this.panel3.Size = new System.Drawing.Size(21, 24);
             this.panel3.TabIndex = 12;
             this.panel3.Visible = false;
             // 
@@ -531,6 +530,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(804, 536);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
