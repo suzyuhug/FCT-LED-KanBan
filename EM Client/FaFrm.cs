@@ -29,6 +29,7 @@ namespace EM_Client
             ds = AdoInterface.GetDataSet(Strsql);
             comboBox1.DataSource = ds.Tables[0];
             comboBox1.DisplayMember = "FailMessage";
+            AdoInterface.FrmfailMes ="";
         }
     }
 }

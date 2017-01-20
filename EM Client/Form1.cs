@@ -97,16 +97,17 @@ namespace EM_Client
             if (PBCS.Value < 100)
             {
                 PBCS.Value += 1;
-            }
-            else
-            {
-                InitSocket();
-                PBCS.Value = 0;
                 if (svstatus.Text == "Status：successful")
                 {
                     panel3.Visible = false;
                     timer2.Enabled = false;
                 }
+            }
+            else
+            {
+                InitSocket();
+                PBCS.Value = 0;
+               
             }
         }
         private void Station()//查询当前电脑绑定的Station
@@ -332,16 +333,21 @@ namespace EM_Client
             {
                 if (svstatus.Text == "Status：successful")
                 {
-                    timer1.Enabled = false;
+
                     FaFrm Fa = new EM_Client.FaFrm();
                     Fa.ShowDialog();
                     string str = AdoInterface.FrmfailMes;
                     label3.Text = str;
-                    sendmessage($"Unusual#{StationLab.Text}#{Perlabel.Text}#{str}");
-                    button3.BackColor = Color.Red;
-                    bl = false;
-                    timer3.Interval = 60000;
-                    timer3.Start();
+                    if (str != "")
+                    {
+                        timer1.Enabled = false;
+                        sendmessage($"Unusual#{StationLab.Text}#{Perlabel.Text}#{str}");
+                        button3.BackColor = Color.Red;
+                        bl = false;
+                        timer3.Interval = 60000;
+                        timer3.Start();
+                    }
+
                 }
                 else
                 {
@@ -355,14 +361,11 @@ namespace EM_Client
                 bl = true;
                 label3.Text = "";
                 timer1.Enabled = true;
-                if (gmeg!=null)
+                if (gmeg != null)
                 {
- sendmessage(gmeg);
+                    sendmessage(gmeg);
                 }
-               
             }
-
-
         }
         int num;
         private void timer1_Tick(object sender, EventArgs e)
