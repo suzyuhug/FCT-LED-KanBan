@@ -222,6 +222,8 @@ namespace EM_Client
             panel2.Left = 15;
             panel1.Visible = false;
             panel2.Visible = true;
+            toolStripMenuItem1.Enabled = false;
+            button4.Visible = true;
             if (label2.Text == "Station")
             {
                 label2.Text = Modelcombo.Text;
@@ -416,6 +418,8 @@ namespace EM_Client
                 Perlabel.Text = "100%";
                 sendmessage($"Completed#{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
                 label2.Text = "Station";
+                button4.Visible = false;
+                toolStripMenuItem1.Enabled =true;
                 string StrSql = $"exec sp_UpdateStationStatus '{StationLab.Text}'";
                 if (AdoInterface.InsertData(StrSql) == 0)
                 {

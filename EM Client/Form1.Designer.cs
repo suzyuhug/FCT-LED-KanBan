@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.svip = new System.Windows.Forms.ToolStripLabel();
@@ -54,7 +54,6 @@
             this.StationLab = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
-            this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.GridView = new System.Windows.Forms.DataGridView();
             this.bs = new System.Windows.Forms.DataGridViewImageColumn();
@@ -63,6 +62,7 @@
             this.EntBut = new System.Windows.Forms.DataGridViewButtonColumn();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.撤销ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button4 = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.serstatus = new System.Windows.Forms.Label();
@@ -203,14 +203,14 @@
             // 站别绑定ToolStripMenuItem
             // 
             this.站别绑定ToolStripMenuItem.Name = "站别绑定ToolStripMenuItem";
-            this.站别绑定ToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.站别绑定ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.站别绑定ToolStripMenuItem.Text = "站别绑定";
             this.站别绑定ToolStripMenuItem.Click += new System.EventHandler(this.站别绑定ToolStripMenuItem_Click);
             // 
             // 等待组装ToolStripMenuItem
             // 
             this.等待组装ToolStripMenuItem.Name = "等待组装ToolStripMenuItem";
-            this.等待组装ToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.等待组装ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.等待组装ToolStripMenuItem.Text = "等待组装";
             this.等待组装ToolStripMenuItem.Click += new System.EventHandler(this.等待组装ToolStripMenuItem_Click);
             // 
@@ -284,16 +284,6 @@
             this.label3.Size = new System.Drawing.Size(0, 20);
             this.label3.TabIndex = 3;
             // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(239, 458);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(111, 27);
-            this.button4.TabIndex = 2;
-            this.button4.Text = "结束组装";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(370, 87);
@@ -312,14 +302,14 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.GridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.GridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.GridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.GridView.ColumnHeadersHeight = 35;
             this.GridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.bs,
@@ -383,6 +373,17 @@
             this.撤销ToolStripMenuItem.Name = "撤销ToolStripMenuItem";
             this.撤销ToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.撤销ToolStripMenuItem.Text = "撤销";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(239, 458);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(111, 27);
+            this.button4.TabIndex = 2;
+            this.button4.Text = "结束组装";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Visible = false;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // imageList1
             // 
