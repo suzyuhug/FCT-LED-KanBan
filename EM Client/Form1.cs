@@ -26,6 +26,7 @@ namespace EM_Client
         {
             UpdateClass.UpdateFrom("FCT-LED-Client");
             this.Text = this.Text + "-" + Application.ProductVersion;
+            label8.Text = "REV." + Application.ProductVersion;
             Station();
             InitSocket();
             modellist();
@@ -42,6 +43,27 @@ namespace EM_Client
                 loadtime();
             }
             cl = true;
+
+
+            MouseMove += Form_MouseMove;
+            MouseDown += Form_MouseDown;
+        }
+        private Point _mousePoint;
+        private void Form_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Top = MousePosition.Y - _mousePoint.Y;
+                Left = MousePosition.X - _mousePoint.X;
+            }
+        }
+        private void Form_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _mousePoint.X = e.X;
+                _mousePoint.Y = e.Y;
+            }
         }
         private void loadtempmodel()//加载临时Model
         {
@@ -124,7 +146,7 @@ namespace EM_Client
         {
             panel1.Width = 365;
             panel1.Height = 165;
-            panel1.Top = 80;
+            panel1.Top = 130;
             panel1.Left = 30;
             panel1.Visible = true;
         }
@@ -208,23 +230,23 @@ namespace EM_Client
            
         }
 
-        private void 站别绑定ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            StationSetting SetFrm = new EM_Client.StationSetting();
-            SetFrm.ShowDialog();
-        }
+        //private void 站别绑定ToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    StationSetting SetFrm = new EM_Client.StationSetting();
+        //    SetFrm.ShowDialog();
+        //}
 
         private void button2_Click(object sender, EventArgs e)
         {
-            panel2.Width = 500;
+            panel2.Width = 600;
             panel2.Height = 430;
-            panel2.Top = 30;
+            panel2.Top = 100;
             panel2.Left = 15;
             panel1.Visible = false;
             panel2.Visible = true;
-            toolStripMenuItem1.Enabled = false;
+            //**toolStripMenuItem1.Enabled = false;
             button4.Visible = true;
-            if (label2.Text == "Station")
+            if (label2.Text == "Model")
             {
                 label2.Text = Modelcombo.Text;
             }          
@@ -290,6 +312,7 @@ namespace EM_Client
                                     if (GridView.Rows[i].Cells["EntBut"].Value.ToString() == "正在组装")
                                     {
                                         GridView.Rows[i].Cells["EntBut"].Value = "完成组装";
+                                        
                                         GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
                                         StrSql =$"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString())}','完成组装';";                                        
                                     }
@@ -405,7 +428,23 @@ namespace EM_Client
 
         private void button4_Click(object sender, EventArgs e)
         {
-            dome();
+            bool bl=true;
+            for (int i = 0; i < GridView.RowCount; i++)
+            {
+                if (GridView.Rows[i].Cells["EntBut"].Value.ToString() == "开始组装")
+                {
+                    MessageBox.Show("操作步骤没有完成，不可结束！", "系统提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    bl = false;
+                    return;
+                }
+              
+            }
+
+            if (bl)
+            {
+                dome();
+            }
+
         }
         private void dome()
         {
@@ -417,9 +456,9 @@ namespace EM_Client
                 PB.Maximum = 100; PB.Value = 100;
                 Perlabel.Text = "100%";
                 sendmessage($"Completed#{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
-                label2.Text = "Station";
+                label2.Text = "Model";
                 button4.Visible = false;
-                toolStripMenuItem1.Enabled =true;
+                //**toolStripMenuItem1.Enabled =true;
                 string StrSql = $"exec sp_UpdateStationStatus '{StationLab.Text}'";
                 if (AdoInterface.InsertData(StrSql) == 0)
                 {
@@ -436,19 +475,7 @@ namespace EM_Client
 
         }
 
-        private void 等待组装ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (svstatus.Text == "Status：successful")
-            {
-                timer1.Enabled = false;                
-                sendmessage($"Waiting#{StationLab.Text}#0%#Waiting");
-            }
-            else
-            {
-                MessageBox.Show("服务端连接失败，请重试！");
-                Tryconnect();
-            }
-        }
+      
         int yctime = 0;
         private void timer3_Tick(object sender, EventArgs e)
         {
@@ -489,6 +516,46 @@ namespace EM_Client
                 fs.Dispose();
                 fs.Close();
             }          
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            StationSetting SetFrm = new EM_Client.StationSetting();
+            SetFrm.ShowDialog();
+        }
+
+        private void button5_Click(object sender, EventArgs e)//等待组装
+        {
+            if (svstatus.Text == "Status：successful")
+            {
+                timer1.Enabled = false;
+                sendmessage($"Waiting#{StationLab.Text}#0%#Waiting");
+            }
+            else
+            {
+                MessageBox.Show("服务端连接失败，请重试！");
+                Tryconnect();
+            }
+        }
+
+        private void pictureBox1_MouseEnter(object sender, EventArgs e)
+        {
+            pictureBox1.Image = Properties.Resources.close2;
+        }
+
+        private void pictureBox1_MouseLeave(object sender, EventArgs e)
+        {
+            pictureBox1.Image = Properties.Resources.close1;
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            Close();
         }
 
        

@@ -119,6 +119,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="StationSetting.resx">
       <DependentUpon>StationSetting.cs</DependentUpon>
@@ -136,6 +137,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MySite.ico" />
+    <None Include="Resources\close2.jpg" />
+    <None Include="Resources\close1.jpg" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
