@@ -56,7 +56,7 @@ namespace EM_Client
                 Top = MousePosition.Y - _mousePoint.Y;
                 Left = MousePosition.X - _mousePoint.X;
             }
-        }
+        }//窗体移动
         private void Form_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -64,7 +64,7 @@ namespace EM_Client
                 _mousePoint.X = e.X;
                 _mousePoint.Y = e.Y;
             }
-        }
+        }//窗体移动
         private void loadtempmodel()//加载临时Model
         {
             string StrSql = $"exec sp_TempModel '{StationLab .Text}'";
@@ -88,9 +88,7 @@ namespace EM_Client
                 else
                 {
                     Thread th = new Thread(loaddome);
-                    th.Start();
-                   
-                    
+                    th.Start();                                       
                 }
 
             }
@@ -99,8 +97,7 @@ namespace EM_Client
         {
             Thread.Sleep(1000);
             this.Invoke((EventHandler)delegate
-            {
-               
+            {               
                 dome();
             });
         }
@@ -114,7 +111,7 @@ namespace EM_Client
             timer2.Start();
             panel3.Visible = true;
         }
-        private void timer2_Tick(object sender, EventArgs e)
+        private void timer2_Tick(object sender, EventArgs e)//通信自动连接进度
         {
             if (PBCS.Value < 100)
             {
@@ -142,7 +139,7 @@ namespace EM_Client
             }
         }
 
-        private void pageset()//页面布局设置
+        private void pageset()//Model选择页面布局设置
         {
             panel1.Width = 365;
             panel1.Height = 165;
@@ -161,7 +158,7 @@ namespace EM_Client
                 Modelcombo.DisplayMember = "Model";                              
             }
         }
-        private void sendmessage(string message)
+        private void sendmessage(string message)//与服务端消息发送
         {
             if (svstatus.Text == "Status：successful")
             {
@@ -216,7 +213,7 @@ namespace EM_Client
                 serstatus.Text = "服务器连接失败";
             }
         }
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)//关闭时单开通信
         {
             if (cl)
             {
@@ -230,11 +227,7 @@ namespace EM_Client
            
         }
 
-        //private void 站别绑定ToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    StationSetting SetFrm = new EM_Client.StationSetting();
-        //    SetFrm.ShowDialog();
-        //}
+       
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -243,8 +236,7 @@ namespace EM_Client
             panel2.Top = 100;
             panel2.Left = 15;
             panel1.Visible = false;
-            panel2.Visible = true;
-            //**toolStripMenuItem1.Enabled = false;
+            panel2.Visible = true;           
             button4.Visible = true;
             if (label2.Text == "Model")
             {
@@ -256,22 +248,23 @@ namespace EM_Client
             GridView.DataSource = ds.Tables[0];
             for (int i = 0; i < GridView.Rows.Count ; i++)
             {
-                if (GridView.Rows[i].Cells["EntBut"].Value.ToString() == "正在组装")
+                if (GridView.Rows[i].Cells["EntBut"].Value.ToString() == "进行中...")
                 {
                     tempgvid = GridView.Rows[i].Cells["ID"].Value.ToString();
                 }
                 switch (GridView.Rows[i].Cells["EntBut"].Value.ToString())
                 {
-                    case "正在组装":
+                    case "进行中...":
                         GridView.Rows[i].Cells["bs"].Value = imageList1.Images[0];
                        
                         break;
-                    case "完成组装":
+                    case "完  成":
                         GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
                         break;
                 }
             }
             rockontime();
+            timecalibration();
         }
         private void rockontime()//进度条计时
         {
@@ -281,9 +274,7 @@ namespace EM_Client
             {
                 int t = int.Parse(str);              
                 TimeSpan ts = new TimeSpan(0, t, 0);
-                label7.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00");
-              //  label5.Text = label7.Text;
-               // Perlabel.Text = "0%";
+                label7.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00");              
                 PB.Maximum = t;
                 PB.Value = t;
                 num = 8;
@@ -294,7 +285,7 @@ namespace EM_Client
         }
         string tempgvid = null;
         string gmeg = null;
-        private void GridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void GridView_CellContentClick(object sender, DataGridViewCellEventArgs e)//gridview点击事件
         {
             if (GridView.RowCount > 0)
             {
@@ -305,26 +296,29 @@ namespace EM_Client
                         if (bl)
                         {
                             string StrSql = null;
-                            if (GridView.CurrentRow.Cells["EntBut"].Value.ToString() != "完成组装")
+                            if (GridView.CurrentRow.Cells["EntBut"].Value.ToString() != "完  成")
                             {
                                 for (int i = 0; i < GridView.RowCount; i++)
                                 {
-                                    if (GridView.Rows[i].Cells["EntBut"].Value.ToString() == "正在组装")
+                                    if (GridView.Rows[i].Cells["EntBut"].Value.ToString() == "进行中...")
                                     {
-                                        GridView.Rows[i].Cells["EntBut"].Value = "完成组装";
+                                        GridView.Rows[i].Cells["EntBut"].Value = "完  成";
                                         
                                         GridView.Rows[i].Cells["bs"].Value = imageList1.Images[1];
-                                        StrSql =$"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString())}','完成组装';";                                        
+                                        StrSql =$"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(GridView.Rows[i].Cells["ID"].Value.ToString())}','完  成','{StationLab.Text.Trim()}';"; 
+                                                                               
                                     }
                                 }
 
-                                GridView.CurrentRow.Cells["EntBut"].Value = "正在组装";
+                                GridView.CurrentRow.Cells["EntBut"].Value = "进行中...";
                                 GridView.CurrentRow.Cells["bs"].Value = imageList1.Images[0];
                                 tempgvid = GridView.CurrentRow.Cells["ID"].Value.ToString();
+                                timecalibration();
                                 string str = $"Operational#{StationLab.Text}#{GridView.CurrentRow.Cells["ID"].Value.ToString()}#{Perlabel.Text}";
                                 sendmessage(str);
                                 gmeg = str;
-                                StrSql = $"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(tempgvid)}','正在组装';";
+                                StrSql = $"{StrSql} exec sp_UpdateTempStepStatus '{int.Parse(tempgvid)}','进行中...','{StationLab.Text.Trim()}';";
+                               
                                 if (AdoInterface.InsertData(StrSql) == 0)
                                 {
                                     MessageBox.Show("数据库连接失败，无法更新状态！");
@@ -340,8 +334,7 @@ namespace EM_Client
                         else
                         {
                             MessageBox.Show("有异常信息在进行中");
-                            //label3.Text = "";
-                            //timer1.Enabled = true;
+                           
                         }
                     }
                     else
@@ -351,8 +344,27 @@ namespace EM_Client
                 }
             }
         }
+
+        private void timecalibration()//校准组装时间
+        {
+            int n=0;
+            for (int i = 0; i < GridView.Rows.Count ; i++)
+            {
+                if (GridView.Rows[i].Cells["EntBut"].Value .ToString()=="完  成")
+                {
+                    n++;
+
+                }
+            }
+            PB.Value =PB.Maximum- ((PB.Maximum / GridView.Rows.Count)*n);
+            double percent = (double)(PB.Maximum - PB.Value) / PB.Maximum;
+            Perlabel.Text = percent.ToString("0.0%");
+            TimeSpan ts = new TimeSpan(0, PB.Value, 0);
+            label5.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00");
+
+        }
         Boolean bl=true;
-        private void button3_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)//异常按钮事件
         {
             if (button3.BackColor != Color.Red)
             {
@@ -393,11 +405,11 @@ namespace EM_Client
             }
         }
         int num;
-        private void timer1_Tick(object sender, EventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)//进度条触发
         {
             time1click();
         }
-        private void time1click()
+        private void time1click()//进度条触发事件
         {
             if (PB.Value > 0)
             {
@@ -420,13 +432,10 @@ namespace EM_Client
             else
             {
                 dome();
-                MessageBox.Show("组装完成");
-
             }
-
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e)//结束组装按钮事件
         {
             bool bl=true;
             for (int i = 0; i < GridView.RowCount; i++)
@@ -436,8 +445,7 @@ namespace EM_Client
                     MessageBox.Show("操作步骤没有完成，不可结束！", "系统提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     bl = false;
                     return;
-                }
-              
+                }             
             }
 
             if (bl)
@@ -446,7 +454,7 @@ namespace EM_Client
             }
 
         }
-        private void dome()
+        private void dome()//完  成
         {
             if (svstatus.Text == "Status：successful")
             {
@@ -458,7 +466,6 @@ namespace EM_Client
                 sendmessage($"Completed#{StationLab.Text}#{tempgvid}#{Perlabel.Text}");
                 label2.Text = "Model";
                 button4.Visible = false;
-                //**toolStripMenuItem1.Enabled =true;
                 string StrSql = $"exec sp_UpdateStationStatus '{StationLab.Text}'";
                 if (AdoInterface.InsertData(StrSql) == 0)
                 {
@@ -477,7 +484,7 @@ namespace EM_Client
 
       
         int yctime = 0;
-        private void timer3_Tick(object sender, EventArgs e)
+        private void timer3_Tick(object sender, EventArgs e)//异常计时
         {
             if (label3.Text != "")
             {
@@ -499,7 +506,7 @@ namespace EM_Client
         }
 
 
-        private void sicconfig(int id)
+        private void sicconfig(int id)//SIC调用接口
         {
             string strsql = $"exec sp_sicconfigquery '{id}'";
             DataSet ds = new DataSet();
@@ -518,17 +525,7 @@ namespace EM_Client
             }          
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-            StationSetting SetFrm = new EM_Client.StationSetting();
-            SetFrm.ShowDialog();
-        }
-
+             
         private void button5_Click(object sender, EventArgs e)//等待组装
         {
             if (svstatus.Text == "Status：successful")
@@ -558,6 +555,10 @@ namespace EM_Client
             Close();
         }
 
-       
+        private void toolStripButton1_Click(object sender, EventArgs e)//站别绑定
+        {
+            StationSetting frm = new StationSetting();
+            frm.ShowDialog();
+        }
     }
 }

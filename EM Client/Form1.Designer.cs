@@ -59,6 +59,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.GridView = new System.Windows.Forms.DataGridView();
+            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Step = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bs = new System.Windows.Forms.DataGridViewImageColumn();
+            this.EntBut = new System.Windows.Forms.DataGridViewButtonColumn();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.撤销ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button4 = new System.Windows.Forms.Button();
@@ -79,10 +83,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Step = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bs = new System.Windows.Forms.DataGridViewImageColumn();
-            this.EntBut = new System.Windows.Forms.DataGridViewButtonColumn();
             this.label8 = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -226,7 +226,7 @@
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(97, 44);
             this.button5.TabIndex = 3;
-            this.button5.Text = "等待组装";
+            this.button5.Text = "等  待";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -237,7 +237,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(97, 44);
             this.button2.TabIndex = 2;
-            this.button2.Text = "开始组装";
+            this.button2.Text = "开  始";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -363,6 +363,43 @@
             this.GridView.TabIndex = 0;
             this.GridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridView_CellContentClick);
             // 
+            // ID
+            // 
+            this.ID.DataPropertyName = "ID";
+            this.ID.HeaderText = "ID";
+            this.ID.Name = "ID";
+            this.ID.ReadOnly = true;
+            this.ID.Visible = false;
+            // 
+            // Step
+            // 
+            this.Step.DataPropertyName = "AssyStep";
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Step.DefaultCellStyle = dataGridViewCellStyle7;
+            this.Step.FillWeight = 199.4383F;
+            this.Step.HeaderText = "组装步骤";
+            this.Step.Name = "Step";
+            this.Step.ReadOnly = true;
+            // 
+            // bs
+            // 
+            this.bs.FillWeight = 38.07107F;
+            this.bs.HeaderText = "----";
+            this.bs.Image = ((System.Drawing.Image)(resources.GetObject("bs.Image")));
+            this.bs.Name = "bs";
+            this.bs.ReadOnly = true;
+            // 
+            // EntBut
+            // 
+            this.EntBut.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.EntBut.DataPropertyName = "But";
+            this.EntBut.FillWeight = 62.49065F;
+            this.EntBut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.EntBut.HeaderText = "操作键";
+            this.EntBut.Name = "EntBut";
+            this.EntBut.ReadOnly = true;
+            this.EntBut.Width = 75;
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -385,7 +422,7 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(111, 27);
             this.button4.TabIndex = 2;
-            this.button4.Text = "结束组装";
+            this.button4.Text = "结  束";
             this.button4.UseVisualStyleBackColor = false;
             this.button4.Visible = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
@@ -489,7 +526,7 @@
             this.groupBox2.Size = new System.Drawing.Size(206, 77);
             this.groupBox2.TabIndex = 14;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Station";
+            this.groupBox2.Text = "站点";
             // 
             // groupBox3
             // 
@@ -500,7 +537,7 @@
             this.groupBox3.Size = new System.Drawing.Size(206, 77);
             this.groupBox3.TabIndex = 15;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Model";
+            this.groupBox3.Text = "型号";
             // 
             // label2
             // 
@@ -552,43 +589,6 @@
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             this.pictureBox1.MouseEnter += new System.EventHandler(this.pictureBox1_MouseEnter);
             this.pictureBox1.MouseLeave += new System.EventHandler(this.pictureBox1_MouseLeave);
-            // 
-            // ID
-            // 
-            this.ID.DataPropertyName = "ID";
-            this.ID.HeaderText = "ID";
-            this.ID.Name = "ID";
-            this.ID.ReadOnly = true;
-            this.ID.Visible = false;
-            // 
-            // Step
-            // 
-            this.Step.DataPropertyName = "AssyStep";
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Step.DefaultCellStyle = dataGridViewCellStyle7;
-            this.Step.FillWeight = 199.4383F;
-            this.Step.HeaderText = "组装步骤";
-            this.Step.Name = "Step";
-            this.Step.ReadOnly = true;
-            // 
-            // bs
-            // 
-            this.bs.FillWeight = 38.07107F;
-            this.bs.HeaderText = "----";
-            this.bs.Image = ((System.Drawing.Image)(resources.GetObject("bs.Image")));
-            this.bs.Name = "bs";
-            this.bs.ReadOnly = true;
-            // 
-            // EntBut
-            // 
-            this.EntBut.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.EntBut.DataPropertyName = "But";
-            this.EntBut.FillWeight = 62.49065F;
-            this.EntBut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.EntBut.HeaderText = "操作键";
-            this.EntBut.Name = "EntBut";
-            this.EntBut.ReadOnly = true;
-            this.EntBut.Width = 75;
             // 
             // label8
             // 
